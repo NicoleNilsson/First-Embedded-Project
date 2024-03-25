@@ -17,6 +17,7 @@ int main(void){
   //setup
   BIT_CLEAR(DDRB, BUTTON_PIN); //set pin on DDRB as 0 to configure pin as input
   BIT_SET(PORTB, BUTTON_PIN); //set pin on PORTB as 1 to activate pull-up resistor
+  BIT_SET(DDRB, LED_PIN); //set pin on DDRB as 1 to configure pin as output
 
   //main loop
   while(1){
