@@ -1,9 +1,10 @@
 #include <avr/io.h>
+#include "button.h"
 
 #define SERIAL_8N1 0x06
 
 void uart_init(){
-    //baud rate=9600, frameformat=8N1
+  //baud rate=9600, frameformat=8N1
   uint16_t baudRate = 9600;
   uint16_t baudSetting = (F_CPU / 4 / baudRate - 1) / 2;
   UCSR0A = 1 << U2X0; //double speed mode
@@ -24,9 +25,9 @@ void uart_put_char(unsigned char data){
 }
 
 char uart_get_char(void){
-  // wait for data
+  //poll button while waiting for data
   while (!(UCSR0A & (1 << RXC0))){
-    //pollButton();
+    poll_button();
   }
   // return data
   return UDR0;
