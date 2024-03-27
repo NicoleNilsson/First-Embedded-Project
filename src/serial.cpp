@@ -3,6 +3,7 @@
 
 #define SERIAL_8N1 0x06
 
+//initiate uart
 void uart_init(){
   //baud rate=9600, frameformat=8N1
   uint16_t baudRate = 9600;
@@ -17,53 +18,58 @@ void uart_init(){
   UCSR0B = ((1 << RXEN0) | (1 << TXEN0));
 }
 
-void uart_put_char(unsigned char data){
+//transmit char
+void uart_put_char(unsigned char recieved_char){
   // wait for transmit buffer to be empty
   while(!(UCSR0A & (1 << UDRE0)));
-  // load data into transmit register
-  UDR0 = data;
+  // load recieved_char into transmit register
+  UDR0 = recieved_char;
 }
 
+//recieve char
 char uart_get_char(void){
-  //poll button while waiting for data
+  //poll button while waiting for recieved_char
   while (!(UCSR0A & (1 << RXC0))){
     poll_button();
   }
-  // return data
+  // return recieved_char
   return UDR0;
 }
 
+//recieve string
+void uart_rec_str(char *buffer, uint8_t maxLength){
+  uint8_t i = 0;
+  char recieved_char;
+  
+  // read until newline or until buffer is full
+  while (i < maxLength - 1) {
+    recieved_char = uart_get_char();
+    if (recieved_char == '\n') {
+      break;
+    }
+    buffer[i++] = recieved_char;
+  }
+  buffer[i] = '\0'; // null-terminate the string to know where string ends
+}
+
+//transmit string
 void uart_put_str(const char *str){
-  //transmit all characters in string
   while (*str) {
     uart_put_char(*str++);
   }
 }
 
-void uart_rec_str(char *buffer, uint8_t maxLength){
-  uint8_t i = 0;
-  char inputChar;
-  
-  // read until newline or until buffer is full
-  while (i < maxLength - 1) {
-    inputChar = uart_get_char();
-    if (inputChar == '\n') {
-      break;
-    }
-    buffer[i++] = inputChar;
-  }
-  buffer[i] = '\0'; // null-terminate the string to know where string ends
-}
-
+//echo recieved char
 void uart_echo_char(){
-  char inputChar = uart_get_char();
-  uart_put_char(inputChar);
+  char recieved_char = uart_get_char();
+  uart_put_char(recieved_char);
   uart_put_char('\n');
 }
 
+//echo recieved string
 void uart_echo_str(){
-  char inputString[50];
-  uart_rec_str(inputString, sizeof(inputString)); //recieve input to arduino
-  uart_put_str(inputString); //return input from arduino
+  char recieved_string[50];
+  uart_rec_str(recieved_string, sizeof(recieved_string)); //recieve input to arduino
+  uart_put_str(recieved_string); //return input from arduino
   uart_put_str("\n");
 }
