@@ -67,9 +67,8 @@ void uart_echo_char(){
 }
 
 //echo recieved string
-void uart_echo_str(){
-  char recieved_string[50];
-  uart_rec_str(recieved_string, sizeof(recieved_string)); //recieve input to arduino
-  uart_put_str(recieved_string); //return input from arduino
+void uart_echo_str(char *str){
+  uart_rec_str(str, sizeof(str)); //recieve input to arduino
+  uart_put_str(str); //return input from arduino
   uart_put_str("\n");
 }

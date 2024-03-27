@@ -9,6 +9,6 @@ char uart_get_char(void);
 void uart_put_str(const char *str);
 void uart_rec_str(char *buffer, uint8_t maxLength);
 void uart_echo_char();
-void uart_echo_str();
+void uart_echo_str(char *str);
 
 #endif
