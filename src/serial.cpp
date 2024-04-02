@@ -6,6 +6,7 @@
 //task to perform while waiting to recieve input char
 #define TASK poll_button()
 
+//flag for recieved data
 #define HAS_CHAR (UCSR0A & (1 << RXC0))
 
 void uart_initiate(){
