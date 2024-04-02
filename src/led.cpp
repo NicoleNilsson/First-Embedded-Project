@@ -1,4 +1,3 @@
-#include <avr/io.h>
 #include <stdio.h>
 #include "led.h"
 #include "bit_manipulation.h"
@@ -8,14 +7,14 @@
 #define LED_POWER_MAX 255
 #define LED_POWER_MIN 0
 
-void led_initiate(void){
+void LED::led_initiate(void){
   //set pin on DDRB as 1 to configure pin as output
-  BIT_SET(DDRB, LED_PIN); 
+  BIT_SET(DDRx, nbit); 
 }
 
-void led_serial_control(void){
+void LED::led_serial_control(void){
   static uint16_t led_power = 0;
-  static char str[16];
+  char str[16];
 
   uart_recieve_str(str, sizeof(str));
   uart_transmit_str(str);
@@ -27,10 +26,10 @@ void led_serial_control(void){
   if(result == 1){
     if(led_power > LED_POWER_THRESHOLD && led_power <= LED_POWER_MAX){
       //switch led on
-      BIT_SET(PORTB, LED_PIN);
+      BIT_SET(PORTx, nbit);
     }else if(led_power <= LED_POWER_THRESHOLD && led_power >= LED_POWER_MIN){
       //switch led off
-      BIT_CLEAR(PORTB, LED_PIN); 
+      BIT_CLEAR(PORTx, nbit); 
     }else{
       uart_transmit_str("Invalid led power value\n");
     }

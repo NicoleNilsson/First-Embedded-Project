@@ -1,17 +1,11 @@
 #include <avr/io.h>
-#include "button.h"
+#include "serial.h"
 
 #define SERIAL_8N1 0x06
 
-//task to perform while waiting to recieve input char
-#define TASK poll_button()
-
-//flag for recieved data
-#define HAS_CHAR (UCSR0A & (1 << RXC0))
-
 void uart_initiate(){
   uint16_t baud_rate = 9600;
-  //calculate baud rade setting value
+  //calculate baud setting value
   uint16_t baud_setting = (F_CPU / 4 / baud_rate - 1) / 2;
   //double speed mode
   UCSR0A = 1 << U2X0; 
@@ -28,20 +22,18 @@ void uart_initiate(){
   UCSR0B = ((1 << RXEN0) | (1 << TXEN0));
 }
 
-void uart_transmit_char(unsigned char recieved_char){
-  //wait for data register to be empty
-  while((UCSR0A & (1 << UDRE0)) == 0);
-  //load recieved_char into transmit register
-  UDR0 = recieved_char;
-}
-
 char uart_recieve_char(void){
-  //perform task while waiting to recieve data
-  while (!HAS_CHAR){
-    TASK;
-  }
+  //waiting to recieve data
+  // while (!HAS_CHAR);
   //return recieved char  
   return UDR0;
+}
+
+void uart_transmit_char(unsigned char recieved_char){
+  //wait for data register to be empty
+  while(!REGISTER_EMPTY);
+  //load recieved_char into transmit register
+  UDR0 = recieved_char;
 }
 
 void uart_recieve_str(char *buffer, uint8_t max_length){
@@ -50,13 +42,16 @@ void uart_recieve_str(char *buffer, uint8_t max_length){
   
   //recieve data until newline or until buffer is full
   while (i < max_length - 1){
-    recieved_char = uart_recieve_char();
-    if (recieved_char == '\n') {
-      break;
+    if(HAS_RECIEVED_CHAR){
+      recieved_char = uart_recieve_char();
+      if (recieved_char == '\n') {
+        break;
+      }else{
+        buffer[i++] = recieved_char;  
+      }
     }
-    buffer[i++] = recieved_char;
   }
-  //null-terminate the string to know where string ends
+  //null-terminate the string to know where it ends
   buffer[i] = '\0'; 
 }
 
