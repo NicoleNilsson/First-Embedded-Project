@@ -2,7 +2,11 @@
 #include "button.h"
 
 #define SERIAL_8N1 0x06
-#define task poll_button()
+
+//task to perform while waiting to recieve input char
+#define TASK poll_button()
+
+#define HAS_CHAR (UCSR0A & (1 << RXC0))
 
 void uart_initiate(){
   uint16_t baud_rate = 9600;
@@ -32,8 +36,8 @@ void uart_transmit_char(unsigned char recieved_char){
 
 char uart_recieve_char(void){
   //perform task while waiting to recieve data
-  while ((UCSR0A & (1 << RXC0)) == 0){
-    task;
+  while (!HAS_CHAR){
+    TASK;
   }
   //return recieved char  
   return UDR0;
