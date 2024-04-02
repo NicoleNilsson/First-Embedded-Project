@@ -44,12 +44,12 @@ char uart_recieve_char(void){
   return UDR0;
 }
 
-void uart_recieve_str(char *buffer, uint8_t maxLength){
+void uart_recieve_str(char *buffer, uint8_t max_length){
   uint8_t i = 0;
   char recieved_char;
   
   //recieve data until newline or until buffer is full
-  while (i < maxLength - 1){
+  while (i < max_length - 1){
     recieved_char = uart_recieve_char();
     if (recieved_char == '\n') {
       break;
