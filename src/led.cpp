@@ -15,7 +15,7 @@ void led_initiate(void){
 
 void led_serial_control(void){
   static uint16_t led_power = 0;
-  static char str[32];
+  static char str[16];
 
   uart_recieve_str(str, sizeof(str));
   uart_transmit_str(str);
