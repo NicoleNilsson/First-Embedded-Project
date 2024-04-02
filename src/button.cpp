@@ -7,9 +7,9 @@
 #define BUTTON_PRESSED(byte, nbit) (BIT_CHECK(byte, nbit) == 0)
 
 void BUTTON::button_initiate(void){
-  //set pin on DDRB as 0 to configure pin as input
+  //set pin on DDRx as 0 to configure pin as input
   BIT_CLEAR(DDRx, nbit);
-  //set pin on PORTB as 1 to activate pull-up resistor
+  //set pin on PORTx as 1 to activate pull-up resistor
   BIT_SET(PORTx, nbit);
 }
 

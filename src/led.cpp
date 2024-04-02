@@ -8,7 +8,7 @@
 #define LED_POWER_MIN 0
 
 void LED::led_initiate(void){
-  //set pin on DDRB as 1 to configure pin as output
+  //set pin on DDRx as 1 to configure pin as output
   BIT_SET(DDRx, nbit); 
 }
 
