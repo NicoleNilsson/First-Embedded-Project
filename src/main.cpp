@@ -5,9 +5,9 @@
 
 int main(void){
   //setup
-  uart_init();
-  led_init();
-  button_init();
+  uart_initiate();
+  led_initiate();
+  button_initiate();
 
   //main loop
   while(1){

@@ -4,23 +4,35 @@
 #include "bit_manipulation.h"
 #include "serial.h"
 
-void led_init(void){
-  BIT_SET(DDRB, LED_PIN); //set pin on DDRB as 1 to configure pin as output
+#define LED_POWER_THRESHOLD 127
+#define LED_POWER_MAX 255
+#define LED_POWER_MIN 0
+
+void led_initiate(void){
+  //set pin on DDRB as 1 to configure pin as output
+  BIT_SET(DDRB, LED_PIN); 
 }
 
 void led_serial_control(void){
-  static uint8_t led_power = 0; //lampan kommer släckas om man skriver >255 pga uint8, gör det nåt?
-  static char str[20];
+  static uint16_t led_power = 0;
+  static char str[32];
 
-  uart_echo_str(str); //recieve input string and echo back
+  uart_recieve_str(str, sizeof(str));
+  uart_transmit_str(str);
+  uart_transmit_str("\n");
 
-  int8_t result = sscanf(str, "ledpower %hhu", &led_power);
+
+  int8_t result = sscanf(str, "ledpower %d", &led_power);
 
   if(result == 1){
-    if(led_power > 127 && led_power <= 255){
-      BIT_SET(PORTB, LED_PIN); //set pin 0 on port B as 1 and turn led on
-    }else if(led_power <= 127 && led_power >= 0){
-      BIT_CLEAR(PORTB, LED_PIN); //clear pin 0 on port B and turn led off
+    if(led_power > LED_POWER_THRESHOLD && led_power <= LED_POWER_MAX){
+      //switch led on
+      BIT_SET(PORTB, LED_PIN);
+    }else if(led_power <= LED_POWER_THRESHOLD && led_power >= LED_POWER_MIN){
+      //switch led off
+      BIT_CLEAR(PORTB, LED_PIN); 
+    }else{
+      uart_transmit_str("Invalid led power value\n");
     }
   }
 }
