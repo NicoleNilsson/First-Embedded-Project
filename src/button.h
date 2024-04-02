@@ -1,12 +1,26 @@
+#include <avr/io.h>
 #include "bit_manipulation.h"
+#include "led.h"
 
 #ifndef __BUTTON_H
 #define __BUTTON_H
 
-//define button pin (will be used on port B, aka 9 on freenove)
-const uint8_t BUTTON_PIN = 1; 
+class BUTTON{
+public:
+    BUTTON(const uint8_t nbit, volatile uint8_t &DDRx, volatile uint8_t &PORTx, volatile uint8_t &PINx, LED &led)
+            :nbit(nbit), DDRx(DDRx), PORTx(PORTx), PINx(PINx), led(led){
+        button_initiate();
+    }
+    const uint8_t nbit;
+    volatile uint8_t &DDRx;
+    volatile uint8_t &PORTx;
+    volatile uint8_t &PINx;
+    LED &led;
+    void poll_button(void);     
 
-void button_initiate(void);
-void poll_button(void);
+private:
+    void button_initiate(void);
+};
+
 
 #endif
