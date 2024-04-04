@@ -20,7 +20,7 @@ public:
     void toggleLED(void);
 
 private:
-void initiateLED(void);
+    void initiateLED(void);
 };
 
 #endif
