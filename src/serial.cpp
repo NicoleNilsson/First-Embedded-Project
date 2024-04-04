@@ -1,10 +1,10 @@
 #include <avr/io.h>
+#include <util/delay.h>
 #include "serial.h"
 
 #define SERIAL_8N1 0x06
 
 void Serial::initiateUART(){
-  uint16_t baudRate = 9600;
   //calculate baud setting value
   uint16_t baudSetting = (F_CPU / 4 / baudRate - 1) / 2;
   //double speed mode
@@ -24,8 +24,8 @@ void Serial::initiateUART(){
 
 char Serial::recieveChar(void){
   //waiting to recieve data
-  // while (!HAS_CHAR);
-  //return recieved char  
+  while(!HAS_RECIEVED_CHAR);
+  //return recieved char 
   return UDR0;
 }
 
@@ -36,19 +36,17 @@ void Serial::transmitChar(unsigned char recievedChar){
   UDR0 = recievedChar;
 }
 
-void Serial::recieveString(char *buffer, uint8_t max_length){
+void Serial::recieveString(char *buffer, uint8_t maxLength){
   uint8_t i = 0;
   char recievedChar;
   
   //recieve data until newline or until buffer is full
-  while (i < max_length - 1){
-    if(HAS_RECIEVED_CHAR){
-      recievedChar = recieveChar();
-      if (recievedChar == '\n') {
-        break;
-      }else{
-        buffer[i++] = recievedChar;  
-      }
+  while (i < maxLength - 1){
+    recievedChar = recieveChar();
+    if (recievedChar == '\n') {
+      break;
+    }else{
+      buffer[i++] = recievedChar;  
     }
   }
   //null-terminate the string to know where it ends

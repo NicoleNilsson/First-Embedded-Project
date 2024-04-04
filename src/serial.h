@@ -6,13 +6,13 @@
 #define HAS_RECIEVED_CHAR (UCSR0A & (1 << RXC0))
 #define REGISTER_EMPTY (UCSR0A & (1 << UDRE0))
 
-
-
 class Serial{
 public:
-    Serial(){
+    Serial(const uint16_t baudRate)
+            :baudRate(baudRate){
         initiateUART();
     }
+
     void transmitChar(unsigned char data);
     char recieveChar(void);
     void transmitString(const char *str);
@@ -20,6 +20,7 @@ public:
     void echoChar();
 
 private:
+    const uint16_t baudRate;
     void initiateUART();
 };
 

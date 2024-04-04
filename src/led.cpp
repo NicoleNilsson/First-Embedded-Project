@@ -23,8 +23,7 @@ void LED::LEDSerialControl(Serial &serial){
   serial.transmitString(str);
   serial.transmitChar('\n');
 
-
-  int8_t result = sscanf(str, "ledpower %d", &LEDPower);
+  uint8_t result = sscanf(str, "ledpower %d", &LEDPower);
 
   if(result == 1){
     if(LEDPower > LED_POWER_THRESHOLD && LEDPower <= LED_POWER_MAX){

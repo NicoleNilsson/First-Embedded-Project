@@ -5,7 +5,7 @@
 
 int main(void){
   //setup
-  Serial uart;
+  Serial uart(9600);
   LED redLED(0, DDRB, PORTB); //aka pin 8 on freenove
   BUTTON redButton(1, DDRB, PORTB, PINB, redLED); //aka pin 9 on freenove
 
