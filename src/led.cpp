@@ -3,35 +3,45 @@
 #include "bit_manipulation.h"
 #include "serial.h"
 
+#define INPUT_CONFIG(byte, nbit) BIT_SET(byte, nbit)
+
 #define LED_POWER_THRESHOLD 127
 #define LED_POWER_MAX 255
 #define LED_POWER_MIN 0
 
+#define LED_ON BIT_SET(PORTx, nbit)
+#define LED_OFF BIT_CLEAR(PORTx, nbit)
+
 void LED::led_initiate(void){
-  //set bit on DDRx as 1 to configure pin as output
-  BIT_SET(DDRx, nbit); 
+  INPUT_CONFIG(DDRx, nbit); 
 }
 
-void LED::led_serial_control(void){
+void LED::led_serial_control(Serial &serial){
   static uint16_t led_power = 0;
   char str[16];
 
-  uart_recieve_str(str, sizeof(str));
-  uart_transmit_str(str);
-  uart_transmit_str("\n");
+  serial.uart_recieve_str(str, sizeof(str));
+  serial.uart_transmit_str(str);
+  serial.uart_transmit_str("\n");
 
 
   int8_t result = sscanf(str, "ledpower %d", &led_power);
 
   if(result == 1){
     if(led_power > LED_POWER_THRESHOLD && led_power <= LED_POWER_MAX){
-      //switch led on
-      BIT_SET(PORTx, nbit);
+      state = true;
     }else if(led_power <= LED_POWER_THRESHOLD && led_power >= LED_POWER_MIN){
-      //switch led off
-      BIT_CLEAR(PORTx, nbit); 
+      state = false;
     }else{
-      uart_transmit_str("Invalid led power value\n");
+      serial.uart_transmit_str("Invalid led power value\n");
     }
+  }
+}
+
+void LED::toggle_led(void){
+  if(state == true){
+    LED_ON;
+  }else if(state == false){
+    LED_OFF;
   }
 }

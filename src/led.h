@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include "serial.h"
 
 #ifndef __LED_H
 #define __LED_H
@@ -13,7 +14,9 @@ public:
     const uint8_t nbit;
     volatile uint8_t &DDRx;
     volatile uint8_t &PORTx;
-    void led_serial_control(void);
+    bool state = false;
+    void led_serial_control(Serial &serial);
+    void toggle_led(void);
 
 private:
 void led_initiate(void);
