@@ -12,33 +12,32 @@
 #define LED_ON BIT_SET(PORTx, nbit)
 #define LED_OFF BIT_CLEAR(PORTx, nbit)
 
-void LED::led_initiate(void){
+void LED::initiateLED(void){
   INPUT_CONFIG(DDRx, nbit); 
 }
 
-void LED::led_serial_control(Serial &serial){
-  static uint16_t led_power = 0;
+void LED::LEDSerialControl(Serial &serial){
   char str[16];
 
-  serial.uart_recieve_str(str, sizeof(str));
-  serial.uart_transmit_str(str);
-  serial.uart_transmit_str("\n");
+  serial.recieveString(str, sizeof(str));
+  serial.transmitString(str);
+  serial.transmitChar('\n');
 
 
-  int8_t result = sscanf(str, "ledpower %d", &led_power);
+  int8_t result = sscanf(str, "ledpower %d", &LEDPower);
 
   if(result == 1){
-    if(led_power > LED_POWER_THRESHOLD && led_power <= LED_POWER_MAX){
+    if(LEDPower > LED_POWER_THRESHOLD && LEDPower <= LED_POWER_MAX){
       state = true;
-    }else if(led_power <= LED_POWER_THRESHOLD && led_power >= LED_POWER_MIN){
+    }else if(LEDPower <= LED_POWER_THRESHOLD && LEDPower >= LED_POWER_MIN){
       state = false;
     }else{
-      serial.uart_transmit_str("Invalid led power value\n");
+      serial.transmitString("Invalid led power value\n");
     }
   }
 }
 
-void LED::toggle_led(void){
+void LED::toggleLED(void){
   if(state == true){
     LED_ON;
   }else if(state == false){

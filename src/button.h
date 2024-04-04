@@ -16,7 +16,7 @@ public:
     volatile uint8_t &PORTx;
     volatile uint8_t &PINx;
     LED &led;
-    void poll_button(void);     
+    void pollButton(void);     
 
 private:
     void button_initiate(void);

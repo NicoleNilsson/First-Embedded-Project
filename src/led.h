@@ -8,18 +8,19 @@ class LED{
 public:
     LED(const uint8_t nbit, volatile uint8_t &DDRx, volatile uint8_t &PORTx)
         : nbit(nbit), DDRx(DDRx), PORTx(PORTx) {
-            led_initiate();
+            initiateLED();
         }
 
     const uint8_t nbit;
     volatile uint8_t &DDRx;
     volatile uint8_t &PORTx;
     bool state = false;
-    void led_serial_control(Serial &serial);
-    void toggle_led(void);
+    volatile uint16_t LEDPower = 0;
+    void LEDSerialControl(Serial &serial);
+    void toggleLED(void);
 
 private:
-void led_initiate(void);
+void initiateLED(void);
 };
 
 #endif

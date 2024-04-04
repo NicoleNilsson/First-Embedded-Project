@@ -11,16 +11,16 @@
 class Serial{
 public:
     Serial(){
-        uart_initiate();
+        initiateUART();
     }
-    void uart_transmit_char(unsigned char data);
-    char uart_recieve_char(void);
-    void uart_transmit_str(const char *str);
-    void uart_recieve_str(char* buffer, uint8_t maxLength);
-    void uart_echo_char();
+    void transmitChar(unsigned char data);
+    char recieveChar(void);
+    void transmitString(const char *str);
+    void recieveString(char* buffer, uint8_t maxLength);
+    void echoChar();
 
 private:
-    void uart_initiate();
+    void initiateUART();
 };
 
 #endif
