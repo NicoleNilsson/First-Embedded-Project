@@ -12,11 +12,10 @@ int main(void){
   //main loop
   while(1){
     if(HAS_RECIEVED_CHAR){
-    redLED.LEDSerialControl(uart);
+      redLED.LEDSerialControl(uart);
     }else{
       redButton.pollButton();
     }
-
     redLED.toggleLED();
   }
 
