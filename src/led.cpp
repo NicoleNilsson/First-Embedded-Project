@@ -3,7 +3,8 @@
 #include "bit_manipulation.h"
 #include "serial.h"
 
-#define INPUT_CONFIG(byte, nbit) BIT_SET(byte, nbit)
+//set bit as 1 to configure pin as output
+#define OUTPUT_CONFIG(byte, nbit) BIT_SET(byte, nbit)
 
 #define LED_POWER_THRESHOLD 127
 #define LED_POWER_MAX 255
@@ -13,7 +14,7 @@
 #define LED_OFF BIT_CLEAR(PORTx, nbit)
 
 void LED::initiateLED(void){
-  INPUT_CONFIG(DDRx, nbit); 
+  OUTPUT_CONFIG(DDRx, nbit); 
 }
 
 void LED::LEDSerialControl(Serial &serial){

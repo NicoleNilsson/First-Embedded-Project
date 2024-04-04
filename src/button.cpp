@@ -5,11 +5,13 @@
 
 //checking input pin. 0 = button pressed
 #define BUTTON_PRESSED(byte, nbit) (BIT_CHECK(byte, nbit) == 0)
-#define OUTPUT_CONFIG(byte, nbit) BIT_CLEAR(byte ,nbit)
+//set bit as 0 to configure pin as input
+#define INPUT_CONFIG(byte, nbit) BIT_CLEAR(byte ,nbit)
+//set bit as 1 to activate pull-up resistor
 #define PULLUP_ACTIVATE(byte, nbit) BIT_SET(byte, nbit)
 
 void BUTTON::button_initiate(void){
-  OUTPUT_CONFIG(DDRx, nbit);
+  INPUT_CONFIG(DDRx, nbit);
   PULLUP_ACTIVATE(PORTx, nbit);
 }
 
