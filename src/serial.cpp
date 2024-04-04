@@ -16,7 +16,7 @@ void Serial::initiateUART(){
   UBRR0L = baudSetting;
 
   //set frame format
-  UCSR0C = SERIAL_8N1; //(1 << UCSZ01) | (1 << UCSZ00) | (1 << USBS0)
+  UCSR0C = SERIAL_8N1; 
 
   //enable UART reciever and transmitter
   UCSR0B = ((1 << RXEN0) | (1 << TXEN0));
