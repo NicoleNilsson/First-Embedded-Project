@@ -18,9 +18,17 @@ void LED::initiateLED(void){
 }
 
 void LED::LEDSerialControl(Serial &serial){
-  char str[16];
+  uint8_t strMaxLength = 16;
+  char str[strMaxLength];
 
-  serial.recieveString(str, sizeof(str));
+  uint8_t result1 = serial.recieveString(str, strMaxLength);
+  if(result1 == STRING_TOO_LONG){
+   serial.transmitString("Command can max be ");
+   serial.transmitInteger(strMaxLength);
+   serial.transmitString(" characters long");
+   serial.transmitChar('\n');
+    return;
+  }
   serial.transmitString(str);
   serial.transmitChar('\n');
 
@@ -34,6 +42,9 @@ void LED::LEDSerialControl(Serial &serial){
     }else{
       serial.transmitString("Invalid led power value\n");
     }
+  }else{
+    serial.transmitString("Unknown command");
+    serial.transmitChar('\n');
   }
 }
 

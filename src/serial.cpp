@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdlib.h> //atoi
 #include "serial.h"
 
 #define SERIAL_8N1 0x06
@@ -36,21 +37,24 @@ void Serial::transmitChar(unsigned char recievedChar){
   UDR0 = recievedChar;
 }
 
-void Serial::recieveString(char *buffer, uint8_t maxLength){
+uint8_t Serial::recieveString(char *buffer, uint8_t maxLength){
   uint8_t i = 0;
   char recievedChar;
   
   //recieve data until newline or until buffer is full
-  while (i < maxLength - 1){
+  while (i <= maxLength){
     recievedChar = recieveChar();
     if (recievedChar == '\n') {
       break;
+    }else if(i == maxLength){
+      return STRING_TOO_LONG;
     }else{
       buffer[i++] = recievedChar;  
     }
   }
-  //null-terminate the string to know where it ends
-  buffer[i] = '\0'; 
+  buffer[i] = '\0'; //null-terminate the string to know where it ends
+
+  return SUCCESS;
 }
 
 void Serial::transmitString(const char *str){
@@ -63,4 +67,11 @@ void Serial::echoChar(){
   char recievedChar = recieveChar();
   transmitChar(recievedChar);
   transmitChar('\n');
+}
+
+void Serial::transmitInteger(const uint16_t& value){
+  char valueAsString[8];
+  itoa(value, valueAsString, 10);
+
+  transmitString(valueAsString);
 }
