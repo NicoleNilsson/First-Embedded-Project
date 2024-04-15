@@ -25,8 +25,7 @@ void LED::LEDSerialControl(Serial &serial){
   if(result1 == STRING_TOO_LONG){
    serial.transmitString("Command can max be ");
    serial.transmitInteger(strMaxLength);
-   serial.transmitString(" characters long");
-   serial.transmitChar('\n');
+   serial.transmitString(" characters long\n");
     return;
   }
   serial.transmitString(str);
@@ -43,8 +42,7 @@ void LED::LEDSerialControl(Serial &serial){
       serial.transmitString("Invalid led power value\n");
     }
   }else{
-    serial.transmitString("Unknown command");
-    serial.transmitChar('\n');
+    serial.transmitString("Unknown command\n");
   }
 }
 
