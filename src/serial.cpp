@@ -47,6 +47,7 @@ uint8_t Serial::recieveString(char *buffer, uint8_t maxLength){
     if (recievedChar == '\n') {
       break;
     }else if(i == maxLength){
+      buffer[i] = '\0'; //null-terminate the string to know where it ends
       return STRING_TOO_LONG;
     }else{
       buffer[i++] = recievedChar;  
